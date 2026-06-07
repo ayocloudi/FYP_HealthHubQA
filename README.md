@@ -112,7 +112,3 @@ Typical output files include:
 - If GPT key is missing, GPT scripts will fail or skip GPT-dependent logic.
 - For final reproduction, run from project root:
   `c:\Users\ayomi\Downloads\FYP-HealthHubQA`
-
-## Contact
-
-For academic submission context, refer to the accompanying project summary and implementation documents in this archive.
