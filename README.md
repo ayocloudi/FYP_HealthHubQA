@@ -3,6 +3,8 @@
 **Author:** Ayomide Ogun-Ajala  
 **Student ID:** 21309903
 
+<img width="1070" height="510" alt="Screenshot 2026-06-07 220949" src="https://github.com/user-attachments/assets/06030e16-7046-487a-9315-3f97cb63076e" />
+
 This archive contains the source code and supporting files for **HealthHubQA**, a biomedical question answering system built for a Final Year Project. The system uses a Retrieval-Augmented Generation (RAG) workflow on PubMedQA-style data and compares model behavior with and without retrieval.
 
 ## Project Summary
@@ -12,10 +14,7 @@ HealthHubQA evaluates biomedical QA under multiple configurations:
 - Retrieval module using sentence embeddings (`all-MiniLM-L6-v2` + cosine similarity)
 - RAG pipeline integrating retrieved contexts with generative models
 - Evaluation pipeline producing accuracy, macro-F1, confusion matrices, and prediction distributions
-- Optional multi-model runs (local model, GPT API model, and local Ollama model)
-
-<img width="1070" height="510" alt="Screenshot 2026-06-07 220949" src="https://github.com/user-attachments/assets/06030e16-7046-487a-9315-3f97cb63076e" />
-
+- Optional multi-model runs (local model, GPT API model, and local Ollama model
 
 ## Main Components
 
