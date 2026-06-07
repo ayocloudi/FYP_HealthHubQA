@@ -1,0 +1,32 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large model cache (downloaded by transformers/sentence-transformers)
+*.bin
+*.safetensors
+*.pt
+*.onnx
+
+# Environment / secrets
+.env
+*.env
+
+# IDE
+.vscode/settings.json
+.idea/

@@ -1,0 +1,132 @@
+HealthHubQA - All Code Files Compilation
+==========================================
+
+FILE: 01_download_pubmedqa.py
+=============================
+# 01_download_pubmedqa.py
+from datasets import load_dataset
+import pandas as pd
+from pathlib import Path
+
+out_dir = Path("data_samples"); out_dir.mkdir(parents=True, exist_ok=True)
+
+ds = load_dataset("pubmed_qa", "pqa_labeled")  # small, labeled variant
+train = ds["train"]
+
+# keep a tiny sample for quick baselines
+df = pd.DataFrame({
+    "question": [x["question"] for x in train[:500]],
+    "context": [x["context"] for x in train[:500]],
+    "long_answer": [x["long_answer"] for x in train[:500]],
+    "final_decision": [x["final_decision"] for x in train[:500]],  # yes/maybe/no
+})
+df.to_csv(out_dir / "pubmedqa_500.csv", index=False)
+print("Saved:", out_dir / "pubmedqa_500.csv", "rows:", len(df))
+
+
+FILE: 02_eda_pubmedqa.py
+========================
+# 01_download_pubmedqa.py
+from datasets import load_dataset
+import pandas as pd
+from pathlib import Path
+
+out_dir = Path("data_samples"); out_dir.mkdir(parents=True, exist_ok=True)
+
+ds = load_dataset("pubmed_qa", "pqa_labeled")  # small, labeled variant
+train = ds["train"]
+
+# keep a tiny slice for quick baselines
+train_slice = train[:500]
+df = pd.DataFrame({
+    "question": train_slice["question"],
+    "context": train_slice["context"],
+    "long_answer": train_slice["long_answer"],
+    "final_decision": train_slice["final_decision"],  # yes/maybe/no
+})
+df.to_csv(out_dir / "pubmedqa_500.csv", index=False)
+print("Saved:", out_dir / "pubmedqa_500.csv", "rows:", len(df))
+
+
+FILE: 03_eda_analysis.py
+========================
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load dataset
+df = pd.read_csv("data_samples/pubmedqa_500.csv")
+
+# Overview
+print("Rows:", len(df))
+print("\nColumns:", df.columns.tolist())
+print("\nSample Question:\n", df['question'].iloc[0])
+print("\nSample Context (truncated):\n", df['context'].iloc[0][:400])
+
+# Label distribution
+if 'final_decision' in df.columns:
+    label_counts = df['final_decision'].value_counts()
+    print("\nLabel distribution:\n", label_counts)
+    
+    # Plot
+    label_counts.plot(kind='bar', title='Answer Distribution (Yes/No/Maybe)')
+    plt.ylabel('Count')
+    plt.show()
+
+# Average text lengths
+df['q_len'] = df['question'].str.len()
+df['c_len'] = df['context'].str.len()
+print("\nAverage Question Length:", df['q_len'].mean())
+print("Average Context Length:", df['c_len'].mean())
+
+
+NOTES: experiment_progress
+==========================
+# Experiment 00 – PubMedQA Dataset Exploration
+Goal: Explore and understand the PubMedQA dataset structure.
+Dataset: PubMedQA (500 samples subset)
+Findings:
+- 3 answer classes (yes/no/maybe)
+- Average question length: ~XX characters
+- Contexts often several sentences long (suitable for retrieval tasks)
+Next Step: Implement baseline RAG model to test initial accuracy.
+
+I have successfully downloaded and explored the PubMedQA dataset (500-sample subset). 
+Using Python (pandas, matplotlib), I performed exploratory data analysis to understand its structure and distribution of answers. 
+This establishes the dataset foundation for my project's next phase—building a baseline RAG model to evaluate hallucination rates in medical question answering.
+
+1. Progress so far
+"I've completed the initial stage of dataset exploration. I downloaded and analysed the PubMedQA dataset — reviewed its question, context, and label structure, and confirmed it's suitable for a healthcare QA setup. This gives me a clear understanding of the data I'll be using for my baseline tests."
+
+2. Next step — Build a baseline RAG model
+"My next step is to implement a Retrieval-Augmented Generation (RAG) baseline. This will connect a retriever (using sentence embeddings) with a generator (LLM) to answer questions from PubMedQA. The goal is to measure the model's initial accuracy and hallucination rate before applying any mitigation techniques like self-reflection or MetaRAG."
+
+3. Purpose of this stage
+"This baseline will help establish a reference point for my later experiments. Once I have the RAG working, I'll start integrating my hallucination mitigation layers — such as self-reflection loops and verification checks — to compare performance and evaluate improvements."
+
+4. What I will deliver next
+"By the end of this phase, I'll have:
+
+A working RAG prototype on PubMedQA
+A CSV log of question–answer pairs, retrieved sources, and accuracy metrics
+Notes on where the model hallucinates (e.g., unsupported or fabricated answers)."
+
+"I'm focusing on building the retriever first — using a sentence transformer to embed the PubMedQA contexts. Then I'll connect it to a simple LLM like facebook/bart-large-cnn or flan-t5-base for generation. Once that pipeline runs, I'll test 50–100 samples and record baseline accuracy and hallucination examples."
+
+
+NOTES: next steps
+=================
+next steps
+more data sets - main focus this week
+
+Interm report - main focus this week
+Working on report drafting
+motivation should not be personalised
+problems, is there a societal impact
+other people working on this Project   
+Narritive version 
+
+Last thing 
+Experimenting - Baseline
+Baseline TFIDF Search using vector search embeddings
+Compare those baselines with my own intervention (how can i improve those sets)
+performace speed, quality of response, metrics, evaluate performance of baseline

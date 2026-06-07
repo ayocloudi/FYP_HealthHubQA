@@ -1,0 +1,217 @@
+================================================================================
+FILES CREATED/MODIFIED - COMPLETE SUMMARY
+================================================================================
+
+ACTIVE EXPERIMENT SCRIPT
+========================
+
+1. run_baselines.py (457 lines)
+   - Single unified script for multi-model QA experiments
+   - Runs all 4 conditions or 2 if GPT key missing
+   - Generates 4 output CSVs with detailed metrics
+   - Key features:
+     * Conditional GPT execution (only if OPENAI_API_KEY present)
+     * Explicit skip message when key missing
+     * Flan-T5 base + cosine similarity retriever
+     * Confusion matrices + prediction distributions
+     * Proper label extraction (yes/no/maybe)
+   
+   Location: FYP-HealthHubQA/run_baselines.py
+   Status: ✅ Ready to run
+
+DOCUMENTATION FILES CREATED
+============================
+
+2. PROJECT_STATUS.txt
+   - Overall project status summary
+   - What was created and why
+   - Security incident note (exposed API key)
+   - Current state and next steps
+   - FAQ section
+   
+   Location: FYP-HealthHubQA/PROJECT_STATUS.txt
+   For: Overview / project tracking
+
+3. QUICKSTART.txt
+   - Fastest reference for getting started
+   - Minimal prerequisites explanation
+   - Option A (no GPT) vs Option B (with GPT)
+   - Expected console output
+   - Troubleshooting quick fixes
+   
+   Location: FYP-HealthHubQA/QUICKSTART.txt
+   For: Quick reference to run immediately
+
+4. RUN_BASELINES_README.txt
+   - Detailed documentation of the script
+   - Overview of all 4 conditions
+   - Complete input/output file descriptions
+   - How to run with examples
+   - Retrieval and generation setup details
+   - Metrics explained
+   - Troubleshooting guide
+   - Version history
+   
+   Location: FYP-HealthHubQA/RUN_BASELINES_README.txt
+   For: Comprehensive documentation
+
+5. IMPLEMENTATION_SUMMARY.txt
+   - Technical implementation details
+   - What was created and why
+   - Output file schemas
+   - Code reuse and new code breakdown
+   - Dependencies list
+   - Setup required
+   - Testing checklist
+   - Next steps
+   
+   Location: FYP-HealthHubQA/IMPLEMENTATION_SUMMARY.txt
+   For: Technical reference / code review
+
+6. PRE_RUN_CHECKLIST.txt
+   - Complete verification checklist before running
+   - Environment validation
+   - Package validation
+   - Dataset validation
+   - Script validation
+   - Decision flowchart (with or without GPT)
+   - Post-run verification
+   - Troubleshooting during run
+   - Final checklist before execution
+   
+   Location: FYP-HealthHubQA/PRE_RUN_CHECKLIST.txt
+   For: Before running - ensure everything works
+
+7. REORGANIZATION_GUIDE.txt
+   - Optional guide for folder structure reorganization
+   - Current vs proposed structure
+   - Migration steps (manual or git)
+   - Pros/cons of reorganizing
+   - Recommended timing (after deadline preferred)
+   
+   Location: FYP-HealthHubQA/REORGANIZATION_GUIDE.txt
+   For: Optional future refactoring
+
+ORIGINAL/EXISTING FILES (UNCHANGED)
+===================================
+
+- data_samples/pubmedqa_500.csv          (Dataset - unchanged)
+- healthhubqa/code_experiments/          (Old code - preserved)
+- healthhubqa/notes/                     (Notes - preserved)
+- healthhubqa/WHAT_I_BUILT.txt          (Archive - preserved)
+- MY_MULTI_MODEL_RAG_EXPERIMENT.md      (Archive - preserved)
+- run_comparison.ps1                    (Archive - preserved)
+
+OUTPUT DIRECTORY (Created on first run)
+=======================================
+
+results/
+├── all_experiments.csv                  (400 rows max, 14 columns)
+├── metrics_summary.csv                  (2-4 rows, 6 columns)
+├── confusion_matrices.csv               (variable rows)
+└── prediction_distributions.csv         (variable rows)
+
+QUICK FILE REFERENCE
+====================
+
+For a quick start:
+→ Read: QUICKSTART.txt (2 min)
+→ Run: python run_baselines.py
+
+For detailed info:
+→ Read: RUN_BASELINES_README.txt (5 min)
+→ Then: PROJECT_STATUS.txt (5 min)
+→ Then: run_baselines.py itself (understand the code)
+
+Before running:
+→ Use: PRE_RUN_CHECKLIST.txt (10 min)
+
+For code review/tech details:
+→ Read: IMPLEMENTATION_SUMMARY.txt
+→ Then: Review run_baselines.py source
+
+For future reorganization:
+→ Read: REORGANIZATION_GUIDE.txt (after experiments done)
+
+WHAT TO READ WHEN
+==================
+
+Just want to run it? 
+  → QUICKSTART.txt
+
+Something not working?
+  → PRE_RUN_CHECKLIST.txt
+
+Want overview of what was done?
+  → PROJECT_STATUS.txt
+
+Need technical details?
+  → IMPLEMENTATION_SUMMARY.txt
+
+Want to understand the script?
+  → RUN_BASELINES_README.txt + run_baselines.py
+
+Thinking about folder reorganization?
+  → REORGANIZATION_GUIDE.txt
+
+FILE STATISTICS
+===============
+
+Total files created: 6 documentation + 1 script = 7 files
+Total lines of documentation: ~1,200 lines
+Total lines of code: 457 lines
+Total estimated read time for all docs: 30-40 minutes
+Total estimated read time for quickstart: 2-3 minutes
+
+DOCUMENT SIZES
+==============
+
+PROJECT_STATUS.txt                  ~350 lines
+QUICKSTART.txt                      ~250 lines
+RUN_BASELINES_README.txt            ~200 lines
+IMPLEMENTATION_SUMMARY.txt          ~200 lines
+PRE_RUN_CHECKLIST.txt               ~250 lines
+REORGANIZATION_GUIDE.txt            ~100 lines
+run_baselines.py                    ~457 lines
+
+TOTAL: ~1,800 lines of documentation and code
+
+VERSION DATES
+=============
+
+Created: February 22, 2026
+Status: ✅ Complete and ready for execution
+Tested: Script syntax validated, dependencies verified
+Next: User to set API key and run experiments
+
+SECURITY NOTES
+==============
+
+⚠️  OpenAI API key was exposed in chat
+    - User should regenerate new key
+    - Old key: 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
+    - Should be REVOKED immediately
+    
+✅ Current script: No API keys hardcoded
+✅ Environment variable only: $env:OPENAI_API_KEY
+✅ Graceful degradation if key missing
+
+SUPPORT/TROUBLESHOOTING
+=======================
+
+Unsure about something?
+→ Check PRE_RUN_CHECKLIST.txt first (has flowchart)
+→ Then QUICKSTART.txt (has troubleshooting)
+→ Then RUN_BASELINES_README.txt (has detailed troubleshooting)
+
+Script errors?
+→ Check PRE_RUN_CHECKLIST.txt (validation section)
+→ Or run: python -m py_compile run_baselines.py
+
+Questions about experiment design?
+→ Read IMPLEMENTATION_SUMMARY.txt
+→ Or read comments in run_baselines.py itself
+
+Ready to run? ✅
+→ Follow PRE_RUN_CHECKLIST.txt
+→ Then execute: python run_baselines.py

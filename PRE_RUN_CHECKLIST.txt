@@ -1,0 +1,239 @@
+================================================================================
+PRE-RUN VERIFICATION CHECKLIST
+================================================================================
+
+BEFORE YOU RUN python run_baselines.py
+
+Security
+--------
+☐ You regenerated your OpenAI API key (old one was exposed)
+☐ You did NOT save any API keys in code or version control
+☐ You will use environment variables only: $env:OPENAI_API_KEY
+
+Python Environment
+------------------
+☐ Virtual environment activated (.venv)
+☐ Python 3.8+ installed
+☐ Run: pip list | findstr -i "torch transformers sentence pandas sklearn"
+
+Required Packages (Should display versions):
+☐ torch         (PyTorch)
+☐ transformers  (HuggingFace)
+☐ sentence-transformers  (MiniLM)
+☐ pandas        (Data handling)
+☐ scikit-learn  (Metrics)
+☐ numpy         (Arrays)
+
+Optional Packages (Only needed for GPT):
+✓ openai        (If running GPT conditions)
+
+Internet & Model Downloads
+--------------------------
+☐ Internet connection working (models download from Hugging Face)
+☐ ~5GB disk space available (first run downloads models)
+☐ Can access https://huggingface.co (no VPN blocks)
+
+Dataset Validation
+------------------
+☐ data_samples/pubmedqa_500.csv exists
+☐ File is readable (try: pd.read_csv("data_samples/pubmedqa_500.csv"))
+☐ Contains columns: question, context, long_answer, final_decision
+☐ Has at least 100 rows
+
+Script Validation
+-----------------
+☐ run_baselines.py exists in current directory
+☐ run_baselines.py has no syntax errors
+   Test: python -m py_compile run_baselines.py
+☐ Configuration looks correct:
+   - SAMPLE_SIZE = 100
+   - TOP_K_RETRIEVAL = 3
+   - MAX_ANSWER_LENGTH = 150
+
+Decision: Run with or without GPT?
+----------------------------------
+
+Option A: WITHOUT GPT (Fastest, ~15-20 min)
+☐ You don't have OpenAI API key OR
+☐ You're running limited tests first OR
+☐ You want baseline Flan-T5 results only
+
+Option B: WITH GPT (Complete, ~30-40 min)
+☐ You have a valid new OpenAI API key AND
+☐ Set environment variable: $env:OPENAI_API_KEY = "sk-proj-..."
+☐ Run: python -c "import os; print(os.getenv('OPENAI_API_KEY'))" → should show key
+
+Output Directory
+----------------
+☐ results/ directory will be created automatically
+☐ You have write permissions in current directory
+☐ No important files named:
+  - all_experiments.csv
+  - metrics_summary.csv
+  - confusion_matrices.csv
+  - prediction_distributions.csv
+  (These will be overwritten)
+
+Execution Readiness
+-------------------
+☐ You have 15-40 min free (depending on GPU/CPU and GPT choice)
+☐ You understand GPT API calls will be made if key is set
+  (Cost: ~$0.10-0.30, estimated)
+☐ First run will take longer (model downloads)
+  (Subsequent runs much faster due to caching)
+
+QUICK EXECUTION FLOWCHART
+=========================
+
+START
+  ↓
+Is your environment ready?
+  NO → Fix issues from checklist above
+  YES → Continue
+  ↓
+Do you want to run GPT?
+  NO → Skip to "Run Flan-T5 Only" branch
+  YES → Continue to "Run with GPT" branch
+
+RUN FLAN-T5 ONLY
+  ↓
+$env:OPENAI_API_KEY = ""  [or just unset it]
+python run_baselines.py
+  ↓
+Wait 15-20 minutes
+  ↓
+Check results/ directory
+
+RUN WITH GPT
+  ↓
+$env:OPENAI_API_KEY = "sk-proj-YOUR-NEW-KEY"
+python run_baselines.py
+  ↓
+Wait 30-40 minutes
+  ↓
+Check results/ directory
+  ↓
+Monitor costs in OpenAI dashboard
+  ↓
+DONE
+
+POST-RUN VERIFICATION
+====================
+
+After run completes, verify:
+
+Output Files Created:
+☐ results/all_experiments.csv exists
+☐ results/metrics_summary.csv exists
+☐ results/confusion_matrices.csv exists
+☐ results/prediction_distributions.csv exists
+
+Output Content:
+☐ all_experiments.csv has 200-400 rows (100 samples × 2-4 conditions)
+☐ metrics_summary.csv has 2-4 rows (one per condition)
+☐ No rows with "GPT error" or "[error]" if running without key
+☐ Metrics columns present: accuracy, macro_f1, precision_macro, recall_macro
+
+Metrics Sanity Checks:
+☐ Accuracy between 0.0 and 1.0
+☐ F1 scores between 0.0 and 1.0
+☐ Flan-T5 + RAG typically better than Flan-T5 + No-RAG
+  (Retrieval helps with medical QA)
+
+TROUBLESHOOTING DURING RUN
+==========================
+
+If you see:
+  "ModuleNotFoundError: No module named 'X'"
+  → pip install X
+  → Try running again
+
+If you see:
+  "RepositoryNotFoundError" for Hugging Face models
+  → Check internet connection
+  → Try again (download might timeout)
+
+If you see:
+  "⚠ Skipping GPT: missing OPENAI_API_KEY"
+  → This is expected if you didn't set the key
+  → Only Flan-T5 conditions will run
+  → If you want GPT, set: $env:OPENAI_API_KEY = "key"
+  → Re-run the script
+
+If script takes 1+ hour and not done:
+  → Normal for first run (downloads ~5GB models)
+  → Grab coffee ☕
+  → Second run will be much faster
+
+If you get "CUDA out of memory":
+  → Script already defaults to CPU
+  → If forcing GPU, switch to CPU: DEVICE = "cpu"
+
+AFTER SUCCESSFUL RUN
+====================
+
+1. Read metrics_summary.csv
+   - Compare Flan-T5 no-RAG vs RAG
+   - Are results reasonable?
+
+2. Open all_experiments.csv
+   - Spot check a few predictions
+   - Do they make sense?
+
+3. Check confusion_matrices.csv
+   - Which classes are confused with which?
+
+4. Check prediction_distributions.csv
+   - Is class balance reasonable?
+
+5. Document findings
+   - What did you learn?
+   - How does RAG help/hurt?
+   - How does Flan-T5 compare to GPT?
+
+FINAL CHECKLIST BEFORE RUNNING
+===============================
+
+Run this verification script first:
+
+python << 'EOF'
+import os
+import sys
+
+print("Verification Check:")
+print("=" * 50)
+
+# Check Python version
+print(f"✓ Python version: {sys.version.split()[0]}")
+
+# Check required modules
+required = ['pandas', 'torch', 'transformers', 'sklearn', 'numpy']
+for mod in required:
+    try:
+        __import__(mod)
+        print(f"✓ {mod} installed")
+    except ImportError:
+        print(f"✗ {mod} NOT installed - pip install {mod}")
+
+# Check dataset
+import pandas as pd
+try:
+    df = pd.read_csv('data_samples/pubmedqa_500.csv')
+    print(f"✓ Dataset loaded: {len(df)} rows")
+except:
+    print(f"✗ Cannot load dataset")
+
+# Check API key
+api_key = os.getenv("OPENAI_API_KEY")
+if api_key:
+    print(f"✓ OPENAI_API_KEY is set (will run GPT)")
+else:
+    print(f"⚠ OPENAI_API_KEY not set (will skip GPT, only Flan-T5)")
+
+print("=" * 50)
+print("Ready to run: python run_baselines.py")
+EOF
+
+If everything shows ✓, you're ready! Run the script now.
+
+GOOD LUCK! 🚀

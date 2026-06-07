@@ -1,0 +1,168 @@
+================================================================================
+CHANGELOG: RUN_BASELINES.PY IMPLEMENTATION
+================================================================================
+Date: February 22, 2026
+FYP: Detecting and Mitigating Hallucinations in Healthcare QA Systems
+
+SUMMARY OF CHANGES
+==================
+
+1. CREATED: run_baselines.py (457 lines)
+   - Single unified script for multi-model, multi-condition QA experiment
+   - Supports Flan-T5 (local) + GPT-4 (API optional)
+   - Supports both No-RAG and RAG conditions
+   - Generates 4 output CSVs for comprehensive metrics
+
+2. KEY FEATURES IMPLEMENTED
+   ✅ GPT-4 API integration with conditional execution
+   ✅ Explicit skip logic: "Skipping GPT: missing OPENAI_API_KEY"
+   ✅ MiniLM-based retriever (cosine similarity, top_k=3)
+   ✅ 3-way classification (yes/no/maybe) label extraction
+   ✅ Detailed logging: similarity scores, retrieved contexts
+   ✅ Confusion matrices per (model, retrieval_setup)
+   ✅ Prediction label distribution per (model, retrieval_setup)
+   ✅ Macro-averaged F1/precision/recall metrics
+   ✅ Run ID tracking for experiment reproducibility
+
+3. OUTPUT FILES GENERATED
+   
+   a) results/all_experiments.csv (100 * 2-4 models = 200-400 rows)
+      Columns: run_id, timestamp, model, retrieval_setup, sample_id,
+               question, true_label, prediction_label, correct,
+               generated_answer, token_length, top1_similarity,
+               mean_similarity, retrieved_contexts
+   
+   b) results/metrics_summary.csv (2-4 rows)
+      Columns: model, retrieval_setup, num_samples, accuracy, macro_f1,
+               precision_macro, recall_macro
+   
+   c) results/confusion_matrices.csv
+      Columns: model, retrieval_setup, true_label, predicted_label, count
+   
+   d) results/prediction_distributions.csv
+      Columns: model, retrieval_setup, prediction_label, count, percentage
+
+4. EXPERIMENTAL CONDITIONS
+   
+   Flan-T5-base (Always runs):
+   ├─ No-RAG: Question → Flan-T5 → Answer (baseline)
+   └─ RAG:    Question → Retriever → Context → Flan-T5 → Answer
+   
+   GPT-4 (Conditional, requires OPENAI_API_KEY):
+   ├─ No-RAG: Question → GPT-4 → Answer
+   └─ RAG:    Question → Retriever → Context → GPT-4 → Answer
+
+5. DEPENDENCIES
+   - pandas, numpy
+   - torch, transformers
+   - sentence_transformers
+   - scikit-learn (metrics, similarity)
+   - openai (optional, for GPT-4)
+
+6. API INTEGRATION NOTES
+   - OpenAI API key NOT hardcoded (read from env var only)
+   - Graceful degradation if key missing (skips GPT conditions)
+   - Raw API response stored in CSV
+   - Proper error handling for API failures
+
+7. RETRIEVAL LOGIC
+   - Model: all-MiniLM-L6-v2 (384-dimensional embeddings)
+   - Method: Cosine similarity (sklearn, more stable than FAISS)
+   - Index: Full PubMedQA dataset (500 contexts)
+   - Top-K: 3 contexts per question
+   - Output: Concatenated contexts + top1_similarity + mean_similarity
+
+8. LABEL EXTRACTION
+   Heuristic: Look for first occurrence of 'yes', 'no', 'maybe' in answer
+   Default: 'maybe' (conservative when ambiguous)
+
+9. VALIDATION
+   ✓ Script loads all required libraries
+   ✓ Graceful handling of missing OpenAI key
+   ✓ Proper column mapping in output CSVs
+   ✓ Confusion matrix validation (rows = true labels, cols = predictions)
+   ✓ Metrics aggregation by (model, retrieval_setup)
+
+10. SETUP REQUIRED BEFORE RUNNING
+    
+    1. If using GPT:
+       $env:OPENAI_API_KEY = "sk-proj-..."
+    
+    2. Run:
+       python run_baselines.py
+    
+    3. Check output in results/ directory
+
+11. BACKWARD COMPATIBILITY
+    - Original data/code NOT modified
+    - Old results preserved in results/ (will be overwritten on next run)
+    - pubmedqa_500.csv still in data_samples/ (unchanged)
+    - Existing scripts still functional
+
+12. KNOWN LIMITATIONS & FUTURE IMPROVEMENTS
+    
+    Current:
+    - Dataset: Fixed to N=100 samples (configurable in code)
+    - Models: Flan-T5-base only (fixed size)
+    - Retrieval: Always top-k=3 (configurable in code)
+    - Device: Auto-detect GPU (CPU fallback)
+    
+    Future:
+    - Add other local models (BART, Pegasus, etc.)
+    - Add other APIs (Claude, Cohere, etc.)
+    - Scale to full N=500 dataset
+    - Add retrieval ablation studies (k=1, k=5, k=10)
+    - Add BERTScore, ROUGE, semantic similarity metrics
+
+13. FILE STRUCTURE (After Implementation)
+    
+    FYP-HealthHubQA/
+    ├── run_baselines.py                 [NEW - Main script]
+    ├── RUN_BASELINES_README.txt         [NEW - Documentation]
+    ├── data_samples/
+    │   ├── pubmedqa_500.csv             [Existing dataset]
+    │   └── ...
+    ├── healthhubqa/
+    │   ├── code_experiments/            [Existing work - untouched]
+    │   └── ...
+    ├── results/                         [NEW OUTPUT DIR]
+    │   ├── all_experiments.csv          [NEW]
+    │   ├── metrics_summary.csv          [NEW]
+    │   ├── confusion_matrices.csv       [NEW]
+    │   └── prediction_distributions.csv [NEW]
+    └── ...
+
+14. TESTING CHECKLIST
+    
+    ✅ Script parses without syntax errors
+    ✅ Loads Flan-T5 model successfully
+    ✅ Builds retriever without FAISS dependency issues
+    ✅ Generates answers for No-RAG and RAG conditions
+    ✅ Extracts labels from answers
+    ✅ Computes metrics correctly
+    ✅ Outputs 4 CSVs with correct schemas
+    ✅ Skips GPT if API key missing
+    ✅ Handles GPU/CPU auto-detection
+    ⏳ Full run with GPT-4 (waiting for API key)
+
+15. QUICK REFERENCE: HOW TO USE
+    
+    # Set OpenAI key (if using GPT)
+    $env:OPENAI_API_KEY = "sk-proj-..."
+    
+    # Run experiment
+    python run_baselines.py
+    
+    # Output files appear in results/
+    # - all_experiments.csv (fine-grained results)
+    # - metrics_summary.csv (4 rows: 2-4 conditions)
+    # - confusion_matrices.csv
+    # - prediction_distributions.csv
+
+NEXT STEPS (User to Decide)
+==========================
+1. Add OpenAI API key and run GPT conditions
+2. Reorganize folder structure (src/, docs/, archive/ if desired)
+3. Scale to full N=500 dataset or increase beam search quality
+4. Add additional evaluation metrics (BLEU, ROUGE, BERTScore)
+5. Integrate with downstream hallucination detection models

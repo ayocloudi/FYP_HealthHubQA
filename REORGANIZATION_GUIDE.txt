@@ -1,0 +1,127 @@
+================================================================================
+OPTIONAL: FOLDER REORGANIZATION GUIDE
+================================================================================
+
+CURRENT STRUCTURE
+=================
+FYP-HealthHubQA/
+├── run_baselines.py
+├── data_samples/
+│   ├── pubmedqa_500.csv
+│   └── *.csv
+├── healthhubqa/
+│   ├── code_experiments/code_experiments/ (nested awkwardly)
+│   │   ├── 01_download_pubmedqa.py
+│   │   ├── ...
+│   │   ├── 10_multi_model_comparison.py  (old)
+│   │   ├── 11_metrics_analysis.py        (old)
+│   │   └── README_MULTI_MODEL.py
+│   ├── notes/
+│   ├── WHAT_I_BUILT.txt
+│   └── ...
+├── results/ (NEW - experiment outputs)
+├── MY_MULTI_MODEL_RAG_EXPERIMENT.md
+└── run_comparison.ps1
+
+PROPOSED STRUCTURE (Optional)
+=============================
+FYP-HealthHubQA/
+├── src/
+│   └── run_baselines.py                    [Main active script]
+│
+├── data/
+│   └── pubmedqa_500.csv                    [Dataset]
+│
+├── results/
+│   ├── all_experiments.csv
+│   ├── metrics_summary.csv
+│   ├── confusion_matrices.csv
+│   └── prediction_distributions.csv
+│
+├── docs/
+│   ├── RUN_BASELINES_README.txt
+│   ├── IMPLEMENTATION_SUMMARY.txt
+│   ├── MY_MULTI_MODEL_RAG_EXPERIMENT.md
+│   └── WHAT_I_BUILT.txt
+│
+├── archive/
+│   └── healthhubqa/
+│       ├── code_experiments/
+│       │   ├── 01_download_pubmedqa.py
+│       │   ├── ...                         (all old scripts)
+│       │   ├── 10_multi_model_comparison.py
+│       │   └── 11_metrics_analysis.py
+│       ├── notes/
+│       ├── PROJECT_PROGRESS_SUMMARY.txt
+│       └── ...
+│
+├── README.md                               (6-line summary)
+└── run_comparison.ps1
+
+MIGRATION STEPS (If You Choose To Reorganize)
+==============================================
+
+Option A: Manual (Safest)
+------------------------
+1. Create directories:
+   mkdir src docs results archive
+
+2. Copy/move files:
+   Copy run_baselines.py to src/
+   Copy pubmedqa_500.csv to data/
+   Move docs to docs/ (WHAT_I_BUILT.txt, etc.)
+   Move old scripts to archive/healthhubqa/
+
+3. Update run_baselines.py import paths:
+   Change: "data_samples/pubmedqa_500.csv"
+   To:     "data/pubmedqa_500.csv"
+
+4. Test:
+   cd src && python run_baselines.py
+
+
+Option B: Git (If Repo Already Exists)
+--------------------------------------
+git mv run_baselines.py src/
+git mv data_samples/pubmedqa_500.csv data/
+git mv MY_MULTI_MODEL_RAG_EXPERIMENT.md docs/
+git mv WHAT_I_BUILT.txt docs/
+# ... etc
+git commit -m "Reorganize folder structure for clarity"
+
+
+WHY REORGANIZE?
+===============
+✓ Clear separation: production (src/) vs results vs docs
+✓ Easier to find active code vs old experiments
+✓ Professional structure for FYP submission
+✓ Scalable for future models/experiments
+✓ Better git history management
+
+WHY NOT?
+========
+× Extra effort with little immediate benefit
+× Path changes could introduce bugs if not careful
+× Old code might still be referenced somewhere
+× Current flat structure is actually fine for a course project
+
+RECOMMENDATION
+===============
+For a March 15 deadline:
+❌ DON'T reorganize right now - focus on finishing experiments
+✅ DO keep current structure until experiments are complete
+✅ Then reorganize before final submission (if time permits)
+
+MINIMAL REORGANIZATION (Recommended for Now)
+============================================
+If you want to organize without major changes:
+
+1. Create docs/ folder:
+   Move RUN_BASELINES_README.txt → docs/
+
+2. Keep everything else as-is
+
+3. Before submission (after experiments done):
+   Run the full reorganization then
+
+This buys you time and minimizes risk of breaking anything.

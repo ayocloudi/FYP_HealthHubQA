@@ -1,0 +1,213 @@
+================================================================================
+QUICK START: Getting Your Experiments Running
+================================================================================
+
+YOU HAVE DONE
+=============
+✅ Created run_baselines.py - single unified experiment script
+✅ Supports Flan-T5 (local) + GPT-4 (API)
+✅ Both No-RAG and RAG conditions
+✅ Outputs 4 detailed CSVs with metrics
+
+SECURITY NOTE
+=============
+⚠️  YOU EXPOSED YOUR OPENAI API KEY IN CHAT!
+    
+    Key: sk-proj-bsdVL5oqyhQ_JWWRb7Q5aWY17T55IrzDuCwWkZomwaIaM4ea3TRjTi-...
+    
+    ✅ IMMEDIATELY REGENERATE THIS KEY:
+       1. Go to https://platform.openai.com/account/api-keys
+       2. Delete the exposed key
+       3. Generate a new key
+       4. Store securely (environment variable only, never in code/chat)
+
+NEXT STEPS TO RUN EXPERIMENTS
+==============================
+
+OPTION 1: RUN WITHOUT GPT (Fastest, No API Key Needed)
+------
+1. Just run:
+   python run_baselines.py
+
+2. Output:
+   ✓ Flan-T5 (no-RAG) results
+   ✓ Flan-T5 (RAG) results
+   ✓ CSVs with 200 rows (2 models × 100 samples)
+   ✓ Metrics: accuracy, F1, confusion matrices
+   
+   Time: ~15-20 min on CPU
+
+OPTION 2: RUN WITH GPT (Full Experiment)
+------
+1. Set your NEW OpenAI API key:
+   
+   PowerShell:
+     $env:OPENAI_API_KEY = "sk-proj-YOUR-NEW-KEY-HERE"
+   
+   Or permanently (Windows):
+     [Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "sk-proj-...", "User")
+     # Then restart PowerShell
+   
+2. Run:
+   python run_baselines.py
+
+3. Output:
+   ✓ Flan-T5 (no-RAG) results
+   ✓ Flan-T5 (RAG) results
+   ✓ GPT-4 (no-RAG) results
+   ✓ GPT-4 (RAG) results
+   ✓ CSVs with 400 rows (4 conditions × 100 samples)
+   ✓ Confusion matrices
+   ✓ Prediction distributions
+   
+   Time: ~30-40 min on CPU
+   Cost: ~$0.10-0.30 (100 queries × 4 conditions)
+
+VERIFYING SETUP (Before Running)
+=================================
+
+Check Python packages installed:
+  pip list | findstr -i "torch transformers sentence openai"
+
+Check OpenAI key is set:
+  python -c "import os; print('API Key set' if os.getenv('OPENAI_API_KEY') else 'API Key NOT set')"
+
+Check internet connectivity:
+  python -c "import urllib.request; urllib.request.urlopen('https://huggingface.co'); print('✓ Can download models')"
+
+EXPECTED OUTPUT (Console)
+=========================
+
+================================================================================
+RESEARCH-GRADE BASELINE EXPERIMENT
+================================================================================
+Device: cpu
+Sample Size: 100
+Top-K Retrieval: 3
+Output Directory: results
+
+STEP 1: Loading PubMedQA dataset...
+✓ Loaded 100 samples
+
+STEP 2: Building retriever (MiniLM + Cosine Similarity)...
+✓ Embedded 500 contexts
+
+STEP 3: Loading language models...
+  Loading Flan-T5-base...
+  ✓ Flan-T5-base loaded
+
+STEP 5: Running 4 baseline conditions...
+
+================================================================================
+Condition: FLAN_T5 + NO_RAG
+================================================================================
+  Processed 25/100 samples
+  Processed 50/100 samples
+  Processed 75/100 samples
+  Processed 100/100 samples
+✓ Completed FLAN_T5 + NO_RAG
+
+[... continues for other conditions ...]
+
+✓ All experiments completed. Total results: 200-400
+
+STEP 6: Writing results CSV...
+✓ Saved: results\all_experiments.csv
+
+STEP 7: Computing metrics...
+
+FLAN_T5 + NO_RAG:
+  Samples: 100
+  Accuracy: 0.40
+  Macro F1: 0.29
+  ...
+
+STEP 8: Generating confusion matrices...
+✓ Saved: results\confusion_matrices.csv
+
+STEP 9: Generating prediction distributions...
+✓ Saved: results\prediction_distributions.csv
+
+================================================================================
+METRICS SUMMARY TABLE
+================================================================================
+
+  model retrieval_setup  num_samples  accuracy  macro_f1  ...
+flan_t5          no_rag          100      0.40    0.2896
+flan_t5             rag          100      0.55    0.2366
+    gpt          no_rag          100      0.26    0.1376  [If key present]
+    gpt             rag          100      0.26    0.1376  [If key present]
+
+================================================================================
+EXPERIMENT COMPLETE
+================================================================================
+
+Output files:
+  1. results\all_experiments.csv
+  2. results\metrics_summary.csv
+  3. results\confusion_matrices.csv
+  4. results\prediction_distributions.csv
+
+TROUBLESHOOTING
+===============
+
+Q: "No module named 'openai'" when running with GPT
+A: pip install openai
+
+Q: "⚠ Skipping GPT: missing OPENAI_API_KEY"
+A: Set the environment variable first (see OPTION 2 above)
+
+Q: Script times out / very slow
+A: Normal on CPU. First run downloads models (~5GB).
+   Subsequent runs use cached models (much faster).
+   Grab coffee ☕ and wait.
+
+Q: CUDA out of memory
+A: Already set to CPU by default. If you have GPU:
+   Edit line 38: DEVICE = "cuda"
+
+Q: API rate limit error
+A: Slow down by adding delay between calls.
+   Or reduce SAMPLE_SIZE (line 33: SAMPLE_SIZE = 50)
+
+Q: "RepositoryNotFoundError" for Hugging Face models
+A: Check internet connection, try again.
+
+WHAT TO DO AFTER RUNNING
+==========================
+1. Check results/metrics_summary.csv
+2. Compare Flan-T5 no-RAG vs RAG (should improve with retrieval)
+3. Compare Flan-T5 vs GPT (GPT should be worse/similar - it's not tuned for this)
+4. Open all_experiments.csv to see individual predictions
+5. Analyze confusion_matrices.csv to see error patterns
+6. Look at prediction_distributions.csv to see class balance
+
+MARCH 15 DEADLINE STRATEGY
+==========================
+Week 1 (Now): 
+  ✓ Run Flan-T5 experiments (15-20 min, no API needed)
+  ✓ Analyze results, check for bugsa
+  
+Week 2:
+  ✓ Get OpenAI key working
+  ✓ Run full experiment with GPT (30-40 min)
+  
+Week 3:
+  ✓ Write analysis/comparison
+  ✓ Create tables/visualizations from CSVs
+  ✓ Prepare presentation
+
+BONUS: Converting CSVs to Nice Tables
+======================================
+python << 'EOF'
+import pandas as pd
+
+# Read and display nicely
+metrics = pd.read_csv('results/metrics_summary.csv')
+print(metrics.to_string(index=False))
+
+# Or export to nice HTML table:
+metrics.to_html('metrics_table.html', index=False)
+EOF
+
+NEXT: Read run_baselines.py code and run it!

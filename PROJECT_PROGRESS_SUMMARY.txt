@@ -1,0 +1,252 @@
+================================================================================
+HEALTHHUBQA - FYP PROJECT PROGRESS SUMMARY
+================================================================================
+Student: Ayomide
+Project: Detecting and Mitigating Hallucinations in Healthcare QA Systems
+Date: February 2026
+
+================================================================================
+WHAT IS THIS PROJECT ABOUT?
+================================================================================
+
+You're building a healthcare chatbot that:
+1. Answers medical questions using AI
+2. Detects when the AI "hallucinates" (makes stuff up)
+3. Uses RAG (Retrieval-Augmented Generation) to stay accurate
+
+Think of it like: Instead of the AI guessing answers, it first looks up 
+relevant medical information, then uses that to answer questions.
+
+================================================================================
+WHAT YOU'VE ACCOMPLISHED SO FAR
+================================================================================
+
+PHASE 1: DATA PREPARATION ✅
+----------------------------
+✓ Downloaded PubMedQA dataset (500 medical Q&A samples)
+✓ Explored the data structure (questions, contexts, answers)
+✓ Created visualizations showing answer distribution
+✓ Confirmed dataset is suitable for healthcare QA
+
+Files Created:
+- 01_download_pubmedqa.py - Downloads the dataset
+- 02_eda_pubmedqa.py - Prepares the data
+- 03_eda_analysis.py - Analyzes and visualizes the data
+- pubmedqa_500.csv - Your dataset (500 samples)
+
+What This Means:
+You have a solid foundation of medical questions and answers to test your system.
+
+
+PHASE 2: RETRIEVAL SYSTEM ✅
+-----------------------------
+✓ Built a retriever using sentence embeddings
+✓ Used FAISS for fast similarity search
+✓ Can find the 3 most relevant medical contexts for any question
+✓ Tested retrieval quality with sample questions
+
+Files Created:
+- 04_baseline_retriever.py - The retrieval system
+- baseline_retrieval_results.csv - Retrieval test results
+
+What This Means:
+When you ask a question, the system can now find relevant medical information
+from the database. This is the "Retrieval" part of RAG.
+
+
+PHASE 3: GENERATION SYSTEM ✅
+------------------------------
+✓ Loaded FLAN-T5 language model (the AI that generates answers)
+✓ Created prompts that format questions + context for the AI
+✓ Limited answer length to prevent long hallucinations
+✓ Tested generation on sample questions
+
+Files Created:
+- 06_baseline_generator.py - The answer generation system
+
+What This Means:
+The AI can now read the retrieved medical information and generate answers.
+This is the "Generation" part of RAG.
+
+
+PHASE 4: COMPLETE RAG PIPELINE ✅
+----------------------------------
+✓ Combined retriever + generator into one system
+✓ Tested on 15 different medical questions
+✓ Recorded similarity scores and generated answers
+✓ Created comprehensive results file
+
+Files Created:
+- 07_complete_rag_pipeline.py - Full end-to-end system
+- complete_rag_pipeline_results.csv - All test results
+
+What This Means:
+You now have a working healthcare QA system! It can:
+1. Take a medical question
+2. Find relevant information
+3. Generate an answer based on that information
+
+
+PHASE 5: EVALUATION SYSTEM ✅
+------------------------------
+✓ Built evaluation framework with metrics
+✓ Tests accuracy, precision, recall, F1-score
+✓ Compares AI predictions vs correct answers (ground truth)
+✓ Runs on 100 samples for statistical significance
+
+Files Created:
+- 08_baseline_rag_evaluation.py - Evaluation system
+
+What This Means:
+You can now measure how well your system performs. This gives you baseline
+numbers to compare against when you add improvements later.
+
+
+PHASE 6: DATA CLEANING ✅
+--------------------------
+✓ Renamed columns to professional academic labels
+✓ Prepared data for interim report
+✓ Created clean, presentation-ready CSV files
+
+Files Created:
+- 09_clean_rag_results.py - Data cleaning script
+- rag_results_cleaned.csv - Clean results for reporting
+
+What This Means:
+Your results are now formatted professionally for your interim report and
+presentations.
+
+================================================================================
+KEY CONCEPTS EXPLAINED SIMPLY
+================================================================================
+
+RAG (Retrieval-Augmented Generation):
+- Instead of AI guessing, it looks up information first
+- Like open-book exam vs closed-book exam
+- Reduces hallucinations because AI has facts to reference
+
+Retriever:
+- Finds relevant medical information from database
+- Uses "embeddings" (mathematical representations of text)
+- FAISS helps search through 500 documents quickly
+
+Generator:
+- FLAN-T5 is the AI model that writes answers
+- Takes question + retrieved info → generates answer
+- Limited to short answers to prevent making stuff up
+
+Ground Truth:
+- The correct answer labeled by medical experts
+- What you compare AI predictions against
+- Used to calculate accuracy
+
+Similarity Score:
+- How relevant the retrieved information is (0-1 scale)
+- Higher = more relevant
+- Helps evaluate retrieval quality
+
+Hallucination:
+- When AI makes up information not in the source
+- Example: AI says "aspirin cures cancer" when context doesn't say that
+- Your project aims to detect and prevent this
+
+================================================================================
+YOUR CURRENT RESULTS
+================================================================================
+
+Dataset: 500 medical Q&A pairs from PubMedQA
+Tests Run: 15 custom questions + 10 dataset samples
+Retrieval: Working with ~0.46 average similarity
+Generation: Working with FLAN-T5-base model
+Evaluation: Framework ready for 100-sample testing
+
+Output Files:
+1. pubmedqa_500.csv - Your dataset
+2. baseline_retrieval_results.csv - Retrieval test results
+3. complete_rag_pipeline_results.csv - Full pipeline results
+4. rag_results_cleaned.csv - Clean results for reporting
+
+================================================================================
+WHAT'S NEXT?
+================================================================================
+
+FOR INTERIM REPORT:
+1. Run evaluation on 100 samples to get baseline metrics
+2. Include accuracy, precision, recall, F1-score
+3. Show sample predictions (correct and incorrect)
+4. Discuss where the system struggles
+
+FOR NEXT PHASE:
+1. Implement self-reflection (AI checks its own answers)
+2. Add hallucination detection metrics
+3. Test with more datasets
+4. Compare baseline vs improved system
+
+FOR DEMONSTRATION:
+1. Show the complete pipeline working
+2. Demonstrate retrieval finding relevant contexts
+3. Show generated answers
+4. Explain evaluation metrics
+
+================================================================================
+HOW TO RUN YOUR SCRIPTS
+================================================================================
+
+On Windows (using your virtual environment):
+1. Open Command Prompt or PowerShell
+2. Navigate to: C:\Users\ayomi\Downloads\FYP-HealthHubQA
+3. Run: .venv\Scripts\python.exe healthhubqa\code_expermiments\code_expermiments\[script_name].py
+
+Example:
+.venv\Scripts\python.exe healthhubqa\code_expermiments\code_expermiments\09_clean_rag_results.py
+
+================================================================================
+FILES YOU CAN SHOW IN YOUR REPORT
+================================================================================
+
+1. pubmedqa_500.csv
+   - Shows your dataset structure
+   - Demonstrates data preparation
+
+2. complete_rag_pipeline_results.csv or rag_results_cleaned.csv
+   - Shows your system's predictions
+   - Includes similarity scores
+   - Has retrieved contexts
+
+3. Charts from 03_eda_analysis.py
+   - Answer distribution (yes/no/maybe)
+   - Question/context length statistics
+
+4. Evaluation metrics (when you run script 08)
+   - Accuracy percentage
+   - Precision, Recall, F1-score
+   - Confusion matrix
+
+================================================================================
+QUICK REFERENCE: WHAT EACH SCRIPT DOES
+================================================================================
+
+01_download_pubmedqa.py     → Downloads dataset
+02_eda_pubmedqa.py          → Prepares dataset
+03_eda_analysis.py          → Analyzes and visualizes data
+04_baseline_retriever.py    → Tests retrieval system
+05_view_results.py          → Views retrieval results
+06_baseline_generator.py    → Tests generation system
+07_complete_rag_pipeline.py → Full RAG system (retrieval + generation)
+08_baseline_rag_evaluation.py → Evaluates system with metrics
+09_clean_rag_results.py     → Cleans data for reporting
+
+================================================================================
+SUMMARY IN ONE SENTENCE
+================================================================================
+
+You've built a working healthcare question-answering system that retrieves
+relevant medical information and generates answers, and you can now measure
+how accurate it is - this is your baseline for detecting hallucinations.
+
+================================================================================
+END OF SUMMARY
+================================================================================
+
+Good luck with your interim report! 🔥
+You've made excellent progress on your FYP.
