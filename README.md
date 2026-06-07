@@ -14,6 +14,8 @@ HealthHubQA evaluates biomedical QA under multiple configurations:
 - Evaluation pipeline producing accuracy, macro-F1, confusion matrices, and prediction distributions
 - Optional multi-model runs (local model, GPT API model, and local Ollama model)
 
+  https://www.image2url.com/r2/default/images/1780866728541-e5649f1e-0f7e-4c65-a055-47bcfab2e0d0.png
+
 ## Main Components
 
 - `run_baselines.py`  
